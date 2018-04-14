@@ -1,0 +1,48 @@
+---
+- hosts: web
+  vars:
+    mariadb_user: root
+    mariadb_password: changeme
+    pma_version: 4.8.0
+    pma_ending: english
+    pma_base_url: https://files.phpmyadmin.net/phpMyAdmin
+    pma_dest: /var/www/html/phpMyAdmin
+    pma_url: {{ pma_base_url }}/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}.tar.gz
+    pma_tmp_dir: /tmp/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}
+
+- tasks:
+  - name: Download and unarchive phpMyAdmin-{{ pma_version }}-{{ pma_ending }}
+    unarchive:
+      src: {{ pma_url }}
+      dest: /tmp
+      remote_src: yes
+
+  - name: Moving phpMyAdmin to web root
+    command: mv {{ pma_tmp_dir }} {{ pma_dest }}
+
+  - name: Update PHP Modules
+    yum:
+      names={{ items }}
+      state=latest
+    with_items:
+      php-gettext
+      php-php-gettext
+      php-mcrypt
+      php-mbstring
+    notify:
+    - restart httpd
+
+  - name: Update default index.html
+    blockinfile:
+      path: /var/www/html/index.html
+      mark: "<!-- PLACEHOLDER for phpMyAdmin -->"
+      content: "<br /><a href="/phpMyAdmin/">phpMyAdmin-{{ pma_version }}</a><br />"
+    notify:
+    - restart httpd
+
+  handlers:
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
+

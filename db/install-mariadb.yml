@@ -2,10 +2,10 @@
 - name: Install MariaDB Client
   hosts: all
   roles:
-    - client
+  - client
 
-- name: Install MariaDB
+- name: Install MariaDB Server
   hosts: db
   roles:
-    - mariadb
+  - mariadb
 

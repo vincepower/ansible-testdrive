@@ -1,6 +1,6 @@
 ---
-- name: install web server
+- name: Install Apache HTTPD and PHP
   hosts: web
   roles:
-    - httpd
-    - php
+  - httpd
+  - php

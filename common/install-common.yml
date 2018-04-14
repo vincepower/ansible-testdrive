@@ -2,15 +2,18 @@
 - hosts: all
   vars:
     ntp_pool: north-america.pool.ntp.org
+
   tasks:
   - name: Install NTP and firewalld
-    yum: name={{ item }} state=latest
+    yum:
+      name={{ item }}
+      state=latest
     with_items:
      - ntp
      - ntpdate
      - firewalld
 
-  - name: Configure ntp file
+  - name: Configure ntp.conf file
     template:
       src=ntp.conf.j2
       dest=/etc/ntp.conf
@@ -34,3 +37,4 @@
     service:
       name: ntpd
       state: restarted
+
