@@ -36,3 +36,9 @@
   notify:
   - Restart MariaDB
 
+- mysql_user:
+    name: "{{ mariadb_remote_user }}"
+    password: "{{ mariadb_remote_password }}"
+    host: "%"
+    priv: "*.*:ALL,GRANT"
+    state: present

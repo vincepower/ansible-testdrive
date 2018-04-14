@@ -1,4 +1,4 @@
 ---
-mariadb_service: mysqld
 mariadb_port: 3306
-mariadb_password: changeme
+mariadb_remote_user: root
+mariadb_remote_password: changeme
