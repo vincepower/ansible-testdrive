@@ -1,7 +1,7 @@
 ---
-# These tasks install php and mysql modules.
+# These tasks install PHP with MySQL modules.
 
-- name: Install httpd and php
+- name: Install PHP with MySQL modules
   yum:
     name={{ item }}
     state=latest
@@ -9,7 +9,7 @@
    - php
    - php-mysql
 
-- name: http service state
+- name: Restart HTTPD service
   service:
     name=httpd
     state=restarted

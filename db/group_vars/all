@@ -1,4 +1,4 @@
 ---
-maria_service: mysqld
-maria_port: 3306
-maria_password: changeme
+mariadb_service: mysqld
+mariadb_port: 3306
+mariadb_password: changeme

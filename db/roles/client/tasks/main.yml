@@ -1,7 +1,7 @@
 ---
 # This playbook will install MariaDB client
 
-- name: Install MariaDB package
+- name: Install MariaDB client package
   yum:
     name=mariadb
     state=latest

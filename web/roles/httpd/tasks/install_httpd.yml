@@ -1,7 +1,7 @@
 ---
-# These tasks install httpd.
+# These tasks install Apache HTTPD.
 
-- name: Install httpd and php
+- name: Install Apache HTTPD
   yum:
     name=httpd
     state=latest
@@ -19,7 +19,7 @@
     state=enabled
     immediate=yes
 
-- name: http service state
+- name: Restart HTTPD service
   service:
     name=httpd
     state=started
