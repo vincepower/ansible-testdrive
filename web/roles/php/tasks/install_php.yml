@@ -1,13 +1,25 @@
 ---
 # These tasks install PHP with MySQL modules.
+# This is very specific to PHP 5.5 on RHEL 7
 
 - name: Install PHP with MySQL modules
   yum:
     name={{ item }}
     state=latest
   with_items:
-   - php
-   - php-mysql
+  - php55-php
+  - php55-php-cli
+  - php55-php-fpm
+  - php55-php-mysqlnd
+
+- name: Moving php.conf
+  command: mv /opt/rh/httpd24/root/etc/httpd/conf.d/php55-php.conf /etc/httpd/conf.d/php55-php.conf
+
+- name: Moving 10-php.conf
+  command: mv /opt/rh/httpd24/root/etc/httpd/conf.modules.d/10-php55-php.conf /etc/httpd/conf.modules.d/10-php55-php.conf
+
+- name: Moving libphp55-php5.so
+  command: mv /opt/rh/httpd24/root/etc/httpd/modules/libphp55-php5.so /etc/httpd/modules/libphp55-php5.so
 
 - name: Restart HTTPD service
   service:
@@ -20,3 +32,4 @@
     name=httpd_can_network_connect_db
     state=true
     persistent=yes
+

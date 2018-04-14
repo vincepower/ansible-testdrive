@@ -5,38 +5,56 @@
     mariadb_password: changeme
     pma_version: 4.8.0
     pma_ending: english
-    pma_base_url: https://files.phpmyadmin.net/phpMyAdmin
-    pma_dest: /var/www/html/phpMyAdmin
-    pma_url: {{ pma_base_url }}/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}.tar.gz
-    pma_tmp_dir: /tmp/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}
+    pma_base_url: "https://files.phpmyadmin.net/phpMyAdmin"
+    pma_dest: "/var/www/html/phpMyAdmin"
+    pma_url: "{{ pma_base_url }}/{{ pma_version }}/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}.tar.gz"
+    pma_tmp_dir: "/tmp/phpMyAdmin-{{ pma_version }}-{{ pma_ending }}"
 
-- tasks:
+  tasks:
+  - name: Does {{ pma_dest }} exist?
+    stat:
+      path={{ pma_dest }}
+    register: pma_exists
+
+  # Won't download if pma_dest exists
   - name: Download and unarchive phpMyAdmin-{{ pma_version }}-{{ pma_ending }}
     unarchive:
-      src: {{ pma_url }}
+      src: "{{ pma_url }}"
       dest: /tmp
       remote_src: yes
+    when: pma_exists.stat.exists == False
 
+  # Won't try to move if pma_dest exists
   - name: Moving phpMyAdmin to web root
-    command: mv {{ pma_tmp_dir }} {{ pma_dest }}
+    command: "mv {{ pma_tmp_dir }} {{ pma_dest }}"
+    when: pma_exists.stat.exists == False
 
   - name: Update PHP Modules
     yum:
-      names={{ items }}
+      name={{ item }}
       state=latest
     with_items:
-      php-gettext
-      php-php-gettext
-      php-mcrypt
-      php-mbstring
+    - php55-php-gd
+    - php55-php-mbstring
+    - php55-php-pdo
     notify:
     - restart httpd
 
+  - name: Creating config.inc.php
+    command: "cp -f {{ pma_dest}}/config.sample.inc.php {{ pma_dest }}/config.inc.php"
+
+  - name: Updating host
+    replace:
+      path: "{{ pma_dest }}/config.inc.php"
+      regexp: "localhost"
+      replace: "{{ lookup('env','DBHOST') }}"
+
   - name: Update default index.html
-    blockinfile:
+    lineinfile:
       path: /var/www/html/index.html
-      mark: "<!-- PLACEHOLDER for phpMyAdmin -->"
-      content: "<br /><a href="/phpMyAdmin/">phpMyAdmin-{{ pma_version }}</a><br />"
+      state: present
+      insertafter: "PLACEHOLDER for phpMyAdmin"
+      line: "<br /><a href=\"/phpMyAdmin/\">phpMyAdmin-{{ pma_version }}</a><br />"
     notify:
     - restart httpd
 

@@ -1,7 +1,7 @@
 ---
-# These tasks install Apache HTTPD.
+# These tasks install Apache HTTPD
 
-- name: Install Apache HTTPD
+- name: Install Apache HTTPD from Red Hat repo
   yum:
     name=httpd
     state=latest
@@ -12,14 +12,14 @@
     state=started
     enabled=yes
 
-- name: insert firewalld rule for httpd
+- name: insert firewalld rule for nginx
   firewalld:
-    port={{ httpd_port }}/tcp
+    port={{ nginx_port }}/tcp
     permanent=true
     state=enabled
     immediate=yes
 
-- name: Restart HTTPD service
+- name: Restart nginx service
   service:
     name=httpd
     state=started
