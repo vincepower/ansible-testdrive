@@ -1,0 +1,6 @@
+---
+- name: install web server
+  hosts: web
+  roles:
+    - httpd
+    - php

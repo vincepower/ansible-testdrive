@@ -1,0 +1,5 @@
+---
+- name: Put PHP Info page in place
+  template:
+    src=info.php.j2
+    dest=/var/www/html/info.php

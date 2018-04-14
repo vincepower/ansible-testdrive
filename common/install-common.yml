@@ -1,0 +1,36 @@
+---
+- hosts: all
+  vars:
+    ntp_pool: north-america.pool.ntp.org
+  tasks:
+  - name: Install NTP and firewalld
+    yum: name={{ item }} state=latest
+    with_items:
+     - ntp
+     - ntpdate
+     - firewalld
+
+  - name: Configure ntp file
+    template:
+      src=ntp.conf.j2
+      dest=/etc/ntp.conf
+    notify:
+    - restart ntpd
+
+  - name: Start the ntp service
+    service:
+      name=ntpd
+      state=started
+      enabled=yes
+
+  - name: Start the firewall service
+    service:
+      name=firewalld
+      state=started
+      enabled=yes
+
+  handlers:
+  - name: restart ntpd
+    service:
+      name: ntpd
+      state: restarted

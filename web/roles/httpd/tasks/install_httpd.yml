@@ -1,0 +1,26 @@
+---
+# These tasks install httpd.
+
+- name: Install httpd and php
+  yum:
+    name=httpd
+    state=latest
+
+- name: Start firewalld
+  service:
+    name=firewalld
+    state=started
+    enabled=yes
+
+- name: insert firewalld rule for httpd
+  firewalld:
+    port={{ httpd_port }}/tcp
+    permanent=true
+    state=enabled
+    immediate=yes
+
+- name: http service state
+  service:
+    name=httpd
+    state=started
+    enabled=yes

@@ -1,0 +1,4 @@
+---
+maria_service: mysqld
+maria_port: 3306
+maria_password: changeme
