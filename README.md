@@ -23,3 +23,5 @@ Using the WebConsole address you can now connect to http://$WebConsole/info.php
 
 Downloads, installs, and configured phpMyAdmin on the web server to manage the database server.
 
+Also configured the phpMyAdmin instances on the web server to point at the database server by default using text replacement as default is always to use localhost.
+
