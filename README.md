@@ -15,7 +15,7 @@ Using the DbConsole address you can now connect and use any MySQL 5.6+ compatibl
 
 ## ansible-testdrive/web
 
-To show how roles can work, this uses two roles. One installs nginx and the second installs PHP.
+To show how roles can work, this uses two roles. One installs Apache HTTPD and the second installs PHP.
 
 Using the WebConsole address you can now connect to http://$WebConsole/info.php
 

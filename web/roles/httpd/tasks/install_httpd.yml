@@ -12,9 +12,9 @@
     state=started
     enabled=yes
 
-- name: insert firewalld rule for nginx
+- name: insert firewalld rule for http
   firewalld:
-    port={{ nginx_port }}/tcp
+    port={{ httpd_port }}/tcp
     permanent=true
     state=enabled
     immediate=yes
